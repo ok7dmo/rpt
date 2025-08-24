@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>FT-897 Control</h1>
+<p>Current frequency: {{ frequency if frequency else '---' }} Hz</p>
+<form id="freqForm">
+  <input type="number" id="freqInput" placeholder="Frequency in Hz"/>
+  <button type="submit">Set</button>
+</form>
+<button id="pttOn">PTT ON</button>
+<button id="pttOff">PTT OFF</button>
+<script>
+document.getElementById('freqForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const freq = parseInt(document.getElementById('freqInput').value);
+  await fetch('/frequency', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({frequency: freq})
+  });
+  window.location.reload();
+});
+
+document.getElementById('pttOn').addEventListener('click', async () => {
+  await fetch('/ptt/on', {method: 'POST'});
+});
+
+document.getElementById('pttOff').addEventListener('click', async () => {
+  await fetch('/ptt/off', {method: 'POST'});
+});
+</script>
+{% endblock %}
